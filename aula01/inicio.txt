@@ -1,0 +1,1 @@
+Iniciando os estudos sobre node.js, espero que consiga pegar o conteudo rapidamente por ja ter conhecimento em js

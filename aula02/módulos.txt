@@ -1,0 +1,1 @@
+Módulos é dividir a sua aplicação/programa em partes, quando temos um programa muito grande seria útil utilizarmos os módulos

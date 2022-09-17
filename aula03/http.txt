@@ -1,0 +1,2 @@
+Protocolo que permite que o cliente se comunique com o servifor
+Com o protocolo http é possível pedir, enviar e receber dados
