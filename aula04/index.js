@@ -13,6 +13,10 @@ expressApp.get('/data', (requisição, resposta) => {
     resposta.sendFile(`${__dirname}/html/data.html`)
 })
 
+expressApp.get('/saudacao', (requisição, resposta) => {
+    resposta.sendFile(`${__dirname}/html/saudacao.html`)
+})
+
 expressApp.get('/saudacao/:nome/:idade/:nacionalidade', (requisição, resposta) => { //trabalhando com parâmetro, "/:nome do parametro"
     const { nome, idade, nacionalidade } = requisição.params //pegando os parametros da requisição feita para o servidor node
     resposta.send(`<h1>
