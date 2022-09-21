@@ -1,0 +1,6 @@
+faz o trabalho de sempre que o servidor sofrer uma alteração ele fechar o mesmo e abrir novamente
+por conta de estar utilizando o windows tive que lidar com algumas limitações e bloqueios do sistema, para isso executei a seguinte linha de código no cmd
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+para fazer o nodemon executar o arquivo e da mesma forma que o node
+node index.js // nodemon index.js
