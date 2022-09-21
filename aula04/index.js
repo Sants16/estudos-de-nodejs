@@ -2,16 +2,15 @@ const express = require('express')
 const expressApp = express() //recebendo a função express
 
 expressApp.get('/', (requisição, resposta) => {
-    resposta.send('Hello Express.js')
+    resposta.sendFile(`${__dirname}/html/index.html`) //__dirname é o diretorio raiz da aplicação, que no caso seria C:\Users\jvsan\OneDrive\Área de Trabalho\Projetos dos cursos\JavaScript\nodejs\aula04
 })
 
 expressApp.get('/sobre', (requisição, resposta) => {
-    resposta.send('Utilizando Express.js pela primeira vez')
+    resposta.sendFile(`${__dirname}/html/sobre.html`)
 })
 
 expressApp.get('/data', (requisição, resposta) => {
-    const data = new Date
-    resposta.send(`Agora são ${data.getHours()}:${data.getMinutes()} do dia ${data.getDay()} do ano de ${data.getFullYear()}`)
+    resposta.sendFile(`${__dirname}/html/data.html`)
 })
 
 expressApp.get('/saudacao/:nome/:idade/:nacionalidade', (requisição, resposta) => { //trabalhando com parâmetro, "/:nome do parametro"
