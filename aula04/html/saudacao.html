@@ -76,17 +76,51 @@
             border: none;
             font-size: 30px;
             cursor: pointer;
-            transition: all ease-in-out 0.3s;
+            transition: all ease-in-out 0.2s;
         }
         form button:hover {
-            background-color: rgb(20, 18, 18);
-            border: 2px solid black;
+            background-color: rgb(0, 85, 7);
+            border: 1px solid #fff;
         }
         #linkNode {
             font-size: 36px;
             margin-bottom: 10px;
         }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputNome = document.querySelector('#inputNome')
+            const inputIdade = document.querySelector('#inputIdade')
+            const inputNacionalidade = document.querySelector('#inputNacionalidade')
+            const btnSubmit = document.querySelector('#btnSubmit')
+            const exibirMensagem = document.querySelector('h2')
+            btnSubmit.addEventListener('click', enviarInfos)
+
+            function enviarInfos(e) {
+                e.preventDefault()
+                const valueNome = inputNome.value
+                const valueIdade = inputIdade.value
+                const valueNacionalidade = inputNacionalidade.value
+                if(valueNome === '' || valueIdade === '' || valueNacionalidade === '') {
+                    exibirMensagem.style.backgroundColor = 'red'
+                    exibirMensagem.textContent = 'Preencha os campos corretamente'
+                } else {
+                    criarLink(valueNome, valueIdade, valueNacionalidade)
+                }
+            }
+
+            function criarLink(nome, idade, nacionalidade) {
+                const formInputs = document.querySelector('form')
+                const showLink = document.querySelector('#linkNode')
+                const linkNode = document.createElement('a')
+                linkNode.id = 'linkNode'
+                linkNode.href = `saudacao/${nome}/${idade}/${nacionalidade}`
+                linkNode.innerHTML = 'Ver a saudação'
+                formInputs.remove()
+                showLink.appendChild(linkNode)
+            }
+        })
+    </script>
 </head>
 <body>
     <div>
@@ -94,13 +128,13 @@
         <h2>A saudação será exibida após os campos serem preenchidos</h2>
         <form>
             <label for="nome">Nome:</label>
-            <input type="text" name="nome" id="inputNome">
+            <input type="text" name="nome" id="inputNome" class="inputs">
 
             <label for="idade">Idade:</label>
-            <input type="number" name="idade" id="inputIdade">
+            <input type="number" name="idade" id="inputIdade" class="inputs">
 
             <label for="nacionalidade">Nacionalidade:</label>
-            <input type="text" name="nacionalidade" id="inputNacionalidade">
+            <input type="text" name="nacionalidade" id="inputNacionalidade" class="inputs">
 
             <button type="submit" id="btnSubmit">Enviar</button>
         </form>
@@ -117,43 +151,5 @@
             </li>
         </ul>
     </div>
-
-    <script>
-        const inputNome = document.querySelector('#inputNome')
-        const inputIdade = document.querySelector('#inputIdade')
-        const inputNacionalidade = document.querySelector('#inputNacionalidade')
-
-        const nome = String(inputNome.value)
-        const idade = String(inputIdade.value)
-        const nacionalidade = String(inputNacionalidade.value)
-
-        const usuario = {
-            nome: `${nome}`,
-            idade: `${idade}`,
-            nacionalidade: `${nacionalidade}`
-        }
-
-        const btnSubmit = document.querySelector('#btnSubmit')
-        btnSubmit.addEventListener('click', enviarInfos)
-
-        function enviarInfos(e) {
-            e.preventDefault()
-            //criarLink(usuario)
-            console.log(nome)
-            console.log(idade)
-            console.log(nacionalidade)
-        }
-
-        function criarLink({nome, idade, nacionalidade}) {
-            const formInputs = document.querySelector('form')
-            const showLink = document.querySelector('#linkNode')
-            const linkNode = document.createElement('a')
-            linkNode.id = 'linkNode'
-            linkNode.href = `saudacao/${nome}/${idade}/${nacionalidade}`
-            linkNode.innerHTML = 'Ver a saudação'
-            formInputs.remove()
-            showLink.appendChild(linkNode)
-        }
-    </script>
 </body>
 </html>
