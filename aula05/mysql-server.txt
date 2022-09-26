@@ -1,0 +1,8 @@
+Aula usando MySQL Server, aprendi como utilizar o MySQL por meio do cmd e como fazer as funções básicas como criar um database, tabela e adicionar informações.
+
+Para conseguir usar o MySQL por linha de comando foi preciso criar uma path nas variaveis de ambiente com o "caminho" da pasta bin do MySQL Server
+
+Após isso foi necessário identificar um servidor para rodar o MySQL, o qual foi o localhost
+
+mysql -h localhots -u root -p
+**depois insere a senha**
