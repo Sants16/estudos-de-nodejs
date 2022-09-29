@@ -6,3 +6,12 @@ Após isso foi necessário identificar um servidor para rodar o MySQL, o qual fo
 
 mysql -h localhots -u root -p
 **depois insere a senha**
+
+para ver os databases criados:
+SHOW DATABASES;
+
+criar um novo database:
+CREATE DATABASE nomeDoDataBase;
+
+acessar o database criado:
+USE nomeDoDataBase;

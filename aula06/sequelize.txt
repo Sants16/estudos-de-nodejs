@@ -1,0 +1,7 @@
+npm i --save sequelize
+
+
+Nesse projeto iremos trabalahr com o mysql então precisamos baixar um módulo para ele também:
+npm i --save mysql2
+
+Sequelize é um módulo que ajuda no trabalho com o banco de dados diretamente do node.js. O Sequelize é um ORM, um sistema que abstrai toda a camada de banco de dados, o que simplifica as sintaxes dos comandos como: SELECT * FROM usuarios WHERE id = 1;
