@@ -1,0 +1,5 @@
+npm i --save express-handlebars
+
+Handlebars é um template engine, ele dá muitas funcionalidades ao HTML, usando estruturas de repetição, condicionais e exibindo dados que vem do backend no HTML
+
+Nesse projeto definimos como defaultLayout como main, sendo assim sempre que queremos exibir algo em html não precisamos criar toda a estrutura padrão de um html novamente

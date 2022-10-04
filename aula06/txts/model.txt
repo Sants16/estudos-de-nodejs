@@ -1,0 +1,1 @@
+Um model é uma referência da nossa tabela dentro do sequelize, podemos usar os models como forma de criar tabelas diretamente do node.js

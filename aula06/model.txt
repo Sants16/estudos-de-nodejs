@@ -1,1 +1,0 @@
-Um model é uma referência da nossa tabela dentro do sequelize
