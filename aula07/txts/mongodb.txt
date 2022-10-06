@@ -1,0 +1,26 @@
+MongoDB é um banco de dados de código aberto, gratuito, de alta performance, sem esquemas e orientado à documentos
+
+DOCUMENTOS:
+São objetos javascript
+{
+    nome: 'João',
+    idade: 17,
+    altura: 1.74
+}
+
+O MongoDB armazena os objetos de mesmo tipo em Collections
+
+CRIAR UM NOVO BANCO DE DADOS:
+use nome-do-banco;
+
+MOSTRAR TODOS OS DATABASES:
+show databases;
+
+ACESSAR UM DATABASE:
+use nome-do-banco
+
+MOSTRAR AS COLLECTIONS EXISTENTES:
+show collections;
+
+MOSTRAR OS DOCUMENTOS DA COLLECTION:
+db.nomeDaCollection.find()
