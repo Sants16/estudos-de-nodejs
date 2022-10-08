@@ -61,7 +61,7 @@ const Usuario = new Schema ({
 
 mongoose.model('nomeDaCollection', Usuario)
 
-//Adicionar dados na collection
+Adicionar dados na collection
 const adicinarDado = mongoose.model('nomeDaCollection')
 
 new AdicionarDados ({
