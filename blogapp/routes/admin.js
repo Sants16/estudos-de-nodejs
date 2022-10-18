@@ -61,11 +61,74 @@ router.post('/categorias/nova', (req, resp) => {
             req.flash('success_msg', 'Categoria criada com sucesso')
             resp.redirect('/admin/categorias')
         })
-        .catch(err => {
+        .catch(() => {
             req.flash('error_msg', 'Houve um erro ao salvar a categoria, tente novamente')
             resp.redirect('/admin')
         })
     }
+})
+
+router.get('/categorias/edit/:id', (req, resp) => {
+    Categoria.findById(req.params.id).lean().then(categoria => {
+        resp.render('admin/editcategorias', {categoria}) 
+    }).catch(() => {
+        req.flash('error_msg', 'Essa categoria não existe')
+        resp.redirect('/admin/categorias')
+    })
+})
+
+router.post('/categorias/edit', (req, resp) => {
+    Categoria.findById(req.body.id).then(categoria => { //* Coleta a categoria com o id correspondente a requisição
+
+        const {nome, slug} = req.body //? Extrai os valores do nome e slug que estão sendo enviados
+
+        let erros = [] //? Array que armazena os erros
+
+        if (!nome || typeof nome == undefined || nome == null) {
+            erros.push({ 
+                texto: "Nome invalido" 
+            })
+        }
+
+        if (!slug || typeof slug == undefined || slug == null) {
+            erros.push({ 
+                texto: "Slug invalido" 
+            })
+        }
+
+        if (erros.length > 0) { //* Caso haja algum erro o mesmo será exibido na tela junto com as informações atuais dos campos referentes ao nome e slug da categoria
+            Categoria.findById(req.body.id).lean().then(categoria => {
+                resp.render("admin/editcategorias", { categoria, erros })
+            }).catch(() => {
+                req.flash("error_msg", "Erro ao pegar os dados")
+                resp.redirect("admin/categorias")
+            })
+        } else {
+            categoria.nome = nome //? Define o nome da categoria como o que está sendo enviado
+            categoria.slug = slug //? Define o slug da categoria como o que está sendo enviado
+
+            categoria.save().then(() => { //* Atualiza as alterações no banco de dados
+                req.flash("success_msg", "Categoria editada com sucesso!")
+                resp.redirect("/admin/categorias")
+            }).catch(() => {
+                req.flash("error_msg", "Erro ao salvar a edição da categoria")
+                resp.redirect("admin/categorias")
+            })
+        }
+    }).catch(() => {
+        req.flash("error_msg", "Erro ao editar a categoria")
+        req.redirect("/admin/categorias")
+    })
+})
+
+router.post('/categorias/deletar', (req, resp) => {
+    Categoria.findByIdAndRemove(req.body.id).then(() => {
+        req.flash('success_msg', 'Categoria deletada com sucesso')
+        resp.redirect('/admin/categorias')
+    }).catch(() => {
+        req.flash('error_msg', 'Não foi possível deletar a categoria')
+        resp.redirect('/admin/categorias')
+    })
 })
 
 module.exports = router
