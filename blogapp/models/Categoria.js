@@ -11,8 +11,8 @@ const Categoria = new Schema({
         required: true
     },
     data: {
-        type: Date, //tipo data
-        default: Date.now() //passando um valor padrão para o campo
+        type: Date, //? Tipo data
+        default: Date.now() //? Passa um valor padrão para o campo
     }
 })
 

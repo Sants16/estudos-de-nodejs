@@ -6,14 +6,12 @@ const mongoose = require('mongoose')
 require('../models/Categoria')
 const Categoria = mongoose.model('categorias')
 
+//! ROTA INICIAL
 router.get('/', (req, resp) => {
     resp.render('admin/index')
 })
 
-router.get('/posts', (req, resp) => {
-    resp.send('Página de posts')
-})
-
+//! EXIBE AS CATEGORIAS
 router.get('/categorias', (req, resp) => {
     Categoria.find().sort({data: 'desc'}).lean()
     .then((categorias) => {
@@ -24,10 +22,12 @@ router.get('/categorias', (req, resp) => {
     })
 })
 
+//! EXIBE TELA DE ADIÇÃO DE NOVA CATEGORIA
 router.get('/categorias/add', (req, resp) => {
     resp.render('admin/addcategorias')
 })
 
+//! ADICIONANDO NOVA CATEGORIA
 router.post('/categorias/nova', (req, resp) => {
     const { nome, slug } = req.body
 
@@ -68,6 +68,7 @@ router.post('/categorias/nova', (req, resp) => {
     }
 })
 
+//! PEGA AS INFORMAÇÕES DA CATEGORIA QUE SERÁ EDITADA
 router.get('/categorias/edit/:id', (req, resp) => {
     Categoria.findById(req.params.id).lean().then(categoria => {
         resp.render('admin/editcategorias', {categoria}) 
@@ -77,6 +78,7 @@ router.get('/categorias/edit/:id', (req, resp) => {
     })
 })
 
+//! EDITADA A CATEGORIA DESEJADA
 router.post('/categorias/edit', (req, resp) => {
     Categoria.findById(req.body.id).then(categoria => { //* Coleta a categoria com o id correspondente a requisição
 
@@ -121,6 +123,7 @@ router.post('/categorias/edit', (req, resp) => {
     })
 })
 
+//! DELETA UMA CATEGORIA ESCOLHIDA
 router.post('/categorias/deletar', (req, resp) => {
     Categoria.findByIdAndRemove(req.body.id).then(() => {
         req.flash('success_msg', 'Categoria deletada com sucesso')
@@ -128,6 +131,21 @@ router.post('/categorias/deletar', (req, resp) => {
     }).catch(() => {
         req.flash('error_msg', 'Não foi possível deletar a categoria')
         resp.redirect('/admin/categorias')
+    })
+})
+
+//! EXIBE AS POSTAGENS
+router.get('/postagens', (req, resp) => {
+    resp.render('admin/postagens')
+})
+
+//! EXIBE TELA DE ADIÇÃO DE NOVA POSTAGEM E LISTA TODAS AS CATEGORIAS
+router.get('/postagens/add', (req, resp) => {
+    Categoria.find().lean().then(categorias => {
+        resp.render('admin/addpostagens', {categorias})
+    }).catch(() => {
+        req.flash('error_msg', 'Houve um erro ao carregar o formulário')
+        resp.redirect('/admin/postagens')
     })
 })
 
