@@ -5,6 +5,8 @@ const router = express.Router() //serve para criar rotas em arquivos separados
 const mongoose = require('mongoose')
 require('../models/Categoria')
 const Categoria = mongoose.model('categorias')
+require('../models/Postagem')
+const Postagem = mongoose.model('postagens')
 
 //! ROTA INICIAL
 router.get('/', (req, resp) => {
@@ -78,7 +80,7 @@ router.get('/categorias/edit/:id', (req, resp) => {
     })
 })
 
-//! EDITADA A CATEGORIA DESEJADA
+//! EDITA A CATEGORIA DESEJADA
 router.post('/categorias/edit', (req, resp) => {
     Categoria.findById(req.body.id).then(categoria => { //* Coleta a categoria com o id correspondente a requisição
 
@@ -136,7 +138,12 @@ router.post('/categorias/deletar', (req, resp) => {
 
 //! EXIBE AS POSTAGENS
 router.get('/postagens', (req, resp) => {
-    resp.render('admin/postagens')
+    Postagem.find().lean().populate({path: 'categoria', strictPopulate: false}).sort({data: 'desc'}).then(postagens => {
+        resp.render('admin/postagens', {postagens})
+    }).catch(() => {
+        req.flash('error_msg', 'Houve um erro ao listar as postagens')
+        resp.redirect('/admin')
+    })
 })
 
 //! EXIBE TELA DE ADIÇÃO DE NOVA POSTAGEM E LISTA TODAS AS CATEGORIAS
@@ -148,5 +155,103 @@ router.get('/postagens/add', (req, resp) => {
         resp.redirect('/admin/postagens')
     })
 })
+
+//! CRIA UMA NOVA POSTAGEM NO BANCO DE DADOS
+router.post('/postagens/nova', (req, resp) => {
+    let erros = []
+
+    const {titulo, slug, descricao, conteudo, categoria} = req.body
+
+    if (!titulo || typeof titulo == undefined || titulo == null) {
+        erros.push({ 
+            texto: "Título inválido" 
+        })
+    }
+    if (!slug || typeof slug == undefined || slug == null) {
+        erros.push({ 
+            texto: "Slug inválido" 
+        })
+    }
+    if (!descricao|| typeof descricao == undefined || descricao == null) {
+        erros.push({ 
+            texto: "Descrição inválida" 
+        })
+    }
+    if (!conteudo || typeof conteudo == undefined || conteudo == null) {
+        erros.push({ 
+            texto: "Conteúdo inválido" 
+        })
+    }
+    if(categoria === '0'){
+        erros.push({
+            texto: 'Categoria inválida, registre uma categoria'
+        })
+    }
+
+    if(erros.length > 0){
+        resp.render('admin/addpostagens', {erros})
+    } else {
+        const novaPostagem = {
+            titulo,
+            slug,
+            descricao,
+            conteudo,
+            categoria
+        }
+
+        new Postagem(novaPostagem).save().then(() => {
+            req.flash('success_msg', 'Postagem criada com sucesso')
+            resp.redirect('/admin/postagens')
+        }).catch(() => {
+            req.flash('error_msg', 'Houve um erro durante o salvamento da postagem')
+            resp.redirect('/admin/postagens')
+        })
+    }
+})
+
+//! PEGA AS INFORMAÇÕES DA POSTAGEM QUE SERÁ EDITADA
+router.get('/postagens/edit/:id', (req, resp) => {
+    Postagem.findById(req.params.id).lean().then(postagem => {
+
+        Categoria.find().lean().then(categorias => {
+            resp.render('admin/editpostagens', {categorias, postagem})
+        }).catch(() => {
+            req.flash('error_msg', 'Houve um erro ao listar as categorias')
+            resp.redirect('/admin/postagens')
+        })
+
+    }).catch(() => {
+        req.flash('error_msg', 'Houve um erro ao carregar o formulário de edição')
+        resp.redirect('/admin/postagens')
+    })
+})
+
+//! EDITA A POSTAGEM
+router.post('/postagens/edit', (req, resp) => {
+    //Postagem.findOne({_id: req.body.id})
+    Postagem.findById(req.body.id).then(postagem => {
+
+        const {titulo, slug, descricao, conteudo, categoria} = req.body
+
+        postagem.titulo = titulo
+        postagem.slug = slug
+        postagem.descricao = descricao
+        postagem.conteudo = conteudo
+        postagem.categoria = categoria
+
+        postagem.save().then(() => {
+            req.flash('success_msg', 'Postagem editada com sucesso!')
+            resp.redirect('/admin/postagens')
+        }).catch(() => {
+            req.flash('error_msg', 'Erro interno')
+            resp.redirect('/admin/postagens')
+        })
+
+    }).catch(() => {
+        req.flash('error_msg', 'Houve um erro ao editar a postagem')
+        resp.redirect('/admin/postagens')
+    })
+})
+
 
 module.exports = router
