@@ -61,11 +61,11 @@ router.post('/categorias/nova', (req, resp) => {
         new Categoria(novaCategoria).save()
         .then(() => {
             req.flash('success_msg', 'Categoria criada com sucesso')
-            resp.redirect('/admin/categorias')
         })
         .catch(() => {
             req.flash('error_msg', 'Houve um erro ao salvar a categoria, tente novamente')
-            resp.redirect('/admin')
+        }).finally(() => {
+            resp.redirect('/admin/categorias')
         })
     }
 })
@@ -105,7 +105,7 @@ router.post('/categorias/edit', (req, resp) => {
                 resp.render("admin/editcategorias", { categoria, erros })
             }).catch(() => {
                 req.flash("error_msg", "Erro ao pegar os dados")
-                resp.redirect("admin/categorias")
+                resp.redirect("/admin/categorias")
             })
         } else {
             categoria.nome = nome //? Define o nome da categoria como o que está sendo enviado
@@ -113,10 +113,10 @@ router.post('/categorias/edit', (req, resp) => {
 
             categoria.save().then(() => { //* Atualiza as alterações no banco de dados
                 req.flash("success_msg", "Categoria editada com sucesso!")
-                resp.redirect("/admin/categorias")
             }).catch(() => {
                 req.flash("error_msg", "Erro ao salvar a edição da categoria")
-                resp.redirect("admin/categorias")
+            }).finally(() => {
+                resp.redirect('/admin/categorias')
             })
         }
     }).catch(() => {
@@ -129,9 +129,9 @@ router.post('/categorias/edit', (req, resp) => {
 router.post('/categorias/deletar', (req, resp) => {
     Categoria.findByIdAndRemove(req.body.id).then(() => {
         req.flash('success_msg', 'Categoria deletada com sucesso')
-        resp.redirect('/admin/categorias')
     }).catch(() => {
         req.flash('error_msg', 'Não foi possível deletar a categoria')
+    }).finally(() => {
         resp.redirect('/admin/categorias')
     })
 })
@@ -201,9 +201,9 @@ router.post('/postagens/nova', (req, resp) => {
 
         new Postagem(novaPostagem).save().then(() => {
             req.flash('success_msg', 'Postagem criada com sucesso')
-            resp.redirect('/admin/postagens')
         }).catch(() => {
             req.flash('error_msg', 'Houve um erro durante o salvamento da postagem')
+        }).finally(() => {
             resp.redirect('/admin/postagens')
         })
     }
@@ -241,9 +241,9 @@ router.post('/postagens/edit', (req, resp) => {
 
         postagem.save().then(() => {
             req.flash('success_msg', 'Postagem editada com sucesso!')
-            resp.redirect('/admin/postagens')
         }).catch(() => {
             req.flash('error_msg', 'Erro interno')
+        }).finally(() => {
             resp.redirect('/admin/postagens')
         })
 
@@ -252,6 +252,18 @@ router.post('/postagens/edit', (req, resp) => {
         resp.redirect('/admin/postagens')
     })
 })
+
+//! DELETANDO POSTAGEM
+router.get('/postagens/deletar/:id', (req, resp) => {
+    Postagem.deleteOne({_id: req.params.id}).then(() => {
+        req.flash('success_msg', 'Postagem deletada com sucesso')
+    }).catch(() => {
+        req.flash('error_msg', 'Houve um erro interno')
+    }).finally(() => {
+        resp.redirect('/admin/postagens')
+    })
+})
+
 
 
 module.exports = router

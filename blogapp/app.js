@@ -9,6 +9,8 @@
     const session = require('express-session')
     const flash = require('connect-flash')
     const moment = require('moment') //? modulo para melhorar a visualização da data
+    require('./models/Postagem')
+    const Postagem = mongoose.model('postagens')
 
 //* Configurações
     //? Sessão
@@ -58,6 +60,21 @@
         app.use(express.static(path.join(__dirname + '/public')))
 
 //* Rotas
+    //? Lista todas as postagens para o usuário
+    app.get('/', (req, resp) => {
+        Postagem.find().lean().populate({path: 'categoria', strictPopulate: false}).sort({data: 'desc'}).then((postagens) => {
+            resp.render('index', {postagens})
+        }).catch(() => {
+            req.flash('error_msg', 'Houve um erro interno')
+            resp.redirect('/404')
+        })
+    })
+
+    //? Caso ocorra um erro o usuário é redirecionado para essa rota
+    app.get('/404', (req, resp) => {
+        resp.send('Erro 404')
+    })
+
     app.use('/admin', admin) //? todas as rotas do arquivo admin.js terão de ter o "prefixo de rota" /admin, ou seja, /admin/posts, /admin/categorias e etc
 
 const PORT = 8081
