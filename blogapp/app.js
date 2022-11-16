@@ -11,6 +11,8 @@
     const moment = require('moment') //? modulo para melhorar a visualização da data
     require('./models/Postagem')
     const Postagem = mongoose.model('postagens')
+    require('./models/Categoria')
+    const Categoria = mongoose.model('categorias')
 
 //* Configurações
     //? Sessão
@@ -69,6 +71,28 @@
             resp.redirect('/404')
         })
     })
+
+    //? Procura uma postagem específica de acordo com o slug
+    app.get('/postagem/:slug', (req, resp) => {
+        Postagem.findOne({slug: req.params.slug}).lean().then(postagem => {
+            if(postagem){
+                resp.render('postagem/index', {postagem})
+            } else {
+                req.flash('error_msg', 'Esta postagem não existe')
+                resp.redirect('/')
+            }
+        }).catch(() => {
+            req.flash('error_msg', 'Houve um erro interno')
+            resp.redirect('/')
+        })
+    })
+
+    app.get('/categorias', (req, resp) => {
+
+    })
+
+
+
 
     //? Caso ocorra um erro o usuário é redirecionado para essa rota
     app.get('/404', (req, resp) => {
