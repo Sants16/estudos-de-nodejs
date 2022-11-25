@@ -87,8 +87,36 @@
         })
     })
 
+    //? Lista as categorias
     app.get('/categorias', (req, resp) => {
+        Categoria.find().lean().then(categoria => {
+            resp.render('categoria/index', {categoria})
+        }).catch(() => {
+            req.flash('error_msg', 'Houve um erro interno ao listar as categorias')
+            resp.redirect('/')
+        })
+    })
 
+    //? Lista todos os slugs que contenham a categoria referida
+    app.get('/categorias/:slug', (req, resp) => {
+        Categoria.findOne({slug: req.params.slug}).lean().then(categoria => {
+
+            if(categoria){ //? se achar a categoria
+                Postagem.find({categoria: categoria._id}).lean().then(postagem => {
+                    resp.render('categoria/postagens', {postagem, categoria})
+                }).catch(() => {
+                    req.flash('error_msg', 'Houve um erro ao listar os posts')
+                    resp.redirect('/')
+                })
+            } else { //? se não achar a categoria
+                req.flash('error_msg', 'Esta categoria não existe')
+                resp.redirect('/')
+            }
+
+        }).catch(() => {
+            req.flash('error_msg', 'Houve um erro interno ao carregar a página desta categoria')
+            resp.redirect('/')
+        })
     })
 
 
