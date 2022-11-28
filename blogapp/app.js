@@ -13,6 +13,7 @@
     const Postagem = mongoose.model('postagens')
     require('./models/Categoria')
     const Categoria = mongoose.model('categorias')
+    const usuario = require('./routes/usuario')
 
 //* Configurações
     //? Sessão
@@ -128,6 +129,7 @@
     })
 
     app.use('/admin', admin) //? todas as rotas do arquivo admin.js terão de ter o "prefixo de rota" /admin, ou seja, /admin/posts, /admin/categorias e etc
+    app.use('/usuario', usuario)
 
 const PORT = 8081
 app.listen(PORT, () => {
