@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 require('../models/Usuario')
 const Usuario = mongoose.model('usuarios')
 const bcrypt = require('bcryptjs')
+const passport = require('passport')
 
 //! EXIBE A TELA DE REGISTRO
 router.get('/registro', (req, resp) => {
@@ -74,6 +75,14 @@ router.post('/registro', (req, resp) => {
 
 router.get('/login', (req, resp) => {
     resp.render('usuario/login')
+})
+
+router.post('/login', (req, resp, next) => {
+    passport.authenticate('local', {
+        successRedirect: '/',
+        failureRedirect: '/usuario/login',
+        failureFlash: true
+    })(req, resp, next)
 })
 
 module.exports = router

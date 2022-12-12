@@ -10,6 +10,11 @@
 <body>
     {{>_navbar}} {{!-- significa que iremos importar um arquivo da pasta partials --}}
     <div class="container mt-4">
+        {{#if error}}
+    <div class="alert alert-danger">{{error}}</div>
+        {{else}}
+
+        {{/if}}
         {{>_msg}}
         {{{body}}}
     </div>

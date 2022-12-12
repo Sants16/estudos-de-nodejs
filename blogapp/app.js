@@ -14,6 +14,8 @@
     require('./models/Categoria')
     const Categoria = mongoose.model('categorias')
     const usuario = require('./routes/usuario')
+    const passport = require('passport')
+    require('./config/auth')(passport)
 
 //* Configurações
     //? Sessão
@@ -22,6 +24,9 @@
             resave: true,
             saveUninitialized: true
         }))
+        //? Passport
+        app.use(passport.initialize())
+        app.use(passport.session())
         //? Flash
         app.use(flash())
 
@@ -30,6 +35,7 @@
         //* Assim criamos variáveis globais
         resp.locals.success_msg = req.flash('success_msg')
         resp.locals.error_msg = req.flash('error_msg')
+        resp.locals.error = req.flash('error')
 
         next() //! Caso não coloquemos o next() o middleware vai parar a nossa requisição e a página vai ficar carregando infinitamente
     })
