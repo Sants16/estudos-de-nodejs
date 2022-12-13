@@ -36,6 +36,7 @@
         resp.locals.success_msg = req.flash('success_msg')
         resp.locals.error_msg = req.flash('error_msg')
         resp.locals.error = req.flash('error')
+        resp.locals.user = req.user || null
 
         next() //! Caso não coloquemos o next() o middleware vai parar a nossa requisição e a página vai ficar carregando infinitamente
     })

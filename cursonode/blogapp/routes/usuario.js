@@ -73,16 +73,25 @@ router.post('/registro', (req, resp) => {
     }
 })
 
+//! EXIBE A TELA DE LOGIN
 router.get('/login', (req, resp) => {
     resp.render('usuario/login')
 })
 
+//! LOGA O USUÁRIO
 router.post('/login', (req, resp, next) => {
     passport.authenticate('local', {
         successRedirect: '/',
         failureRedirect: '/usuario/login',
         failureFlash: true
     })(req, resp, next)
+})
+
+//! REALIZA O LOGOUT
+router.get('/logout', (req, resp) => {
+    req.logout()
+    req.flash('success_msg', 'Deslogado com sucesso')
+    resp.redirect('/')
 })
 
 module.exports = router

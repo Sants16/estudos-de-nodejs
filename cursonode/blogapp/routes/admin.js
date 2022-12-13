@@ -1,20 +1,22 @@
 const express = require('express')
-const router = express.Router() //serve para criar rotas em arquivos separados
+const router = express.Router() //* Serve para criar rotas em arquivos separados
 
-// Usando model de forma externa com mongoose
+//* Usando model de forma externa com mongoose
 const mongoose = require('mongoose')
 require('../models/Categoria')
 const Categoria = mongoose.model('categorias')
 require('../models/Postagem')
 const Postagem = mongoose.model('postagens')
+//* Helper para verificar se o usuário é um administrador
+const { eAdmin } = require('../helpers/eAdmin')
 
 //! ROTA INICIAL
-router.get('/', (req, resp) => {
+router.get('/', eAdmin, (req, resp) => {
     resp.render('admin/index')
 })
 
 //! EXIBE AS CATEGORIAS
-router.get('/categorias', (req, resp) => {
+router.get('/categorias', eAdmin, (req, resp) => {
     Categoria.find().sort({data: 'desc'}).lean()
     .then((categorias) => {
         resp.render('admin/categorias', {categorias})
@@ -25,12 +27,12 @@ router.get('/categorias', (req, resp) => {
 })
 
 //! EXIBE TELA DE ADIÇÃO DE NOVA CATEGORIA
-router.get('/categorias/add', (req, resp) => {
+router.get('/categorias/add', eAdmin, (req, resp) => {
     resp.render('admin/addcategorias')
 })
 
 //! ADICIONANDO NOVA CATEGORIA
-router.post('/categorias/nova', (req, resp) => {
+router.post('/categorias/nova', eAdmin, (req, resp) => {
     const { nome, slug } = req.body
 
     //* Validação
@@ -71,7 +73,7 @@ router.post('/categorias/nova', (req, resp) => {
 })
 
 //! PEGA AS INFORMAÇÕES DA CATEGORIA QUE SERÁ EDITADA
-router.get('/categorias/edit/:id', (req, resp) => {
+router.get('/categorias/edit/:id', eAdmin, (req, resp) => {
     Categoria.findById(req.params.id).lean().then(categoria => {
         resp.render('admin/editcategorias', {categoria}) 
     }).catch(() => {
@@ -81,7 +83,7 @@ router.get('/categorias/edit/:id', (req, resp) => {
 })
 
 //! EDITA A CATEGORIA DESEJADA
-router.post('/categorias/edit', (req, resp) => {
+router.post('/categorias/edit', eAdmin, (req, resp) => {
     Categoria.findById(req.body.id).then(categoria => { //* Coleta a categoria com o id correspondente a requisição
 
         const {nome, slug} = req.body //? Extrai os valores do nome e slug que estão sendo enviados
@@ -126,7 +128,7 @@ router.post('/categorias/edit', (req, resp) => {
 })
 
 //! DELETA UMA CATEGORIA ESCOLHIDA
-router.post('/categorias/deletar', (req, resp) => {
+router.post('/categorias/deletar', eAdmin, (req, resp) => {
     Categoria.findByIdAndRemove(req.body.id).then(() => {
         req.flash('success_msg', 'Categoria deletada com sucesso')
     }).catch(() => {
@@ -137,7 +139,7 @@ router.post('/categorias/deletar', (req, resp) => {
 })
 
 //! EXIBE AS POSTAGENS
-router.get('/postagens', (req, resp) => {
+router.get('/postagens', eAdmin, (req, resp) => {
     Postagem.find().lean().populate({path: 'categoria', strictPopulate: false}).sort({data: 'desc'}).then(postagens => {
         resp.render('admin/postagens', {postagens})
     }).catch(() => {
@@ -147,7 +149,7 @@ router.get('/postagens', (req, resp) => {
 })
 
 //! EXIBE TELA DE ADIÇÃO DE NOVA POSTAGEM E LISTA TODAS AS CATEGORIAS
-router.get('/postagens/add', (req, resp) => {
+router.get('/postagens/add', eAdmin, (req, resp) => {
     Categoria.find().lean().then(categorias => {
         resp.render('admin/addpostagens', {categorias})
     }).catch(() => {
@@ -157,7 +159,7 @@ router.get('/postagens/add', (req, resp) => {
 })
 
 //! CRIA UMA NOVA POSTAGEM NO BANCO DE DADOS
-router.post('/postagens/nova', (req, resp) => {
+router.post('/postagens/nova', eAdmin, (req, resp) => {
     let erros = []
 
     const {titulo, slug, descricao, conteudo, categoria} = req.body
@@ -210,7 +212,7 @@ router.post('/postagens/nova', (req, resp) => {
 })
 
 //! PEGA AS INFORMAÇÕES DA POSTAGEM QUE SERÁ EDITADA
-router.get('/postagens/edit/:id', (req, resp) => {
+router.get('/postagens/edit/:id', eAdmin, (req, resp) => {
     Postagem.findById(req.params.id).lean().then(postagem => {
 
         Categoria.find().lean().then(categorias => {
@@ -227,7 +229,7 @@ router.get('/postagens/edit/:id', (req, resp) => {
 })
 
 //! EDITA A POSTAGEM
-router.post('/postagens/edit', (req, resp) => {
+router.post('/postagens/edit', eAdmin, (req, resp) => {
     //Postagem.findOne({_id: req.body.id})
     Postagem.findById(req.body.id).then(postagem => {
 
@@ -254,7 +256,7 @@ router.post('/postagens/edit', (req, resp) => {
 })
 
 //! DELETANDO POSTAGEM
-router.get('/postagens/deletar/:id', (req, resp) => {
+router.get('/postagens/deletar/:id', eAdmin, (req, resp) => {
     Postagem.deleteOne({_id: req.params.id}).then(() => {
         req.flash('success_msg', 'Postagem deletada com sucesso')
     }).catch(() => {
