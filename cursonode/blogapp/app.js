@@ -16,6 +16,7 @@
     const usuario = require('./routes/usuario')
     const passport = require('passport')
     require('./config/auth')(passport)
+    const db = require('./config/db')
 
 //* Configurações
     //? Sessão
@@ -58,7 +59,7 @@
 
     //? Mongoose
         try{
-            mongoose.connect('mongodb://localhost/blogapp', { useNewUrlParser: true })
+            mongoose.connect(db.mongoURI, { useNewUrlParser: true })
             .then(() => {
                 console.log('Conectado ao banco de dados')
             })
@@ -138,7 +139,7 @@
     app.use('/admin', admin) //? todas as rotas do arquivo admin.js terão de ter o "prefixo de rota" /admin, ou seja, /admin/posts, /admin/categorias e etc
     app.use('/usuario', usuario)
 
-const PORT = 8081
+const PORT = process.env.PORT || 8081
 app.listen(PORT, () => {
-    console.log('Servidor rodando, http://localhost:8081');
+    console.log('Servidor rodando');
 })

@@ -1,0 +1,104 @@
+POST http://localhost:3000/api/services
+Content-Type: application/json
+
+{
+    "name": "Um serviço",
+    "description": "Uma descrição",
+    "price": 1400,
+    "image": "https://github.com/Sants16.png"
+}
+
+###
+GET http://localhost:3000/api/services
+
+###
+GET http://localhost:3000/api/services/639bc8930ca7f95e4639553d
+
+###
+DELETE  http://localhost:3000/api/services/639df9111baca9836585962f
+
+###
+PUT http://localhost:3000/api/services/639bc6cb63ad46dba0a4f3d9
+Content-Type: application/json
+
+{
+    "name": "",
+    "description": "Uma descrição",
+    "price": 1400,
+    "image": "https://github.com/Sants16.png"
+}
+
+
+
+###
+POST http://localhost:3000/api/parties
+Content-Type: application/json
+
+{
+    "title": "Meu evento 2",
+    "author": "João",
+    "description": "Festa de aniversário",
+    "budget": 9000,
+    "image": "https://github.com/Sants16.png",
+    "services": [
+        {
+            "name": "Serviço 1",
+            "description": "primeiro serviço",
+            "price": 1500,
+            "image": "https://github.com/Sants16.png"
+        },
+        {
+            "name": "Serviço 2",
+            "description": "segundo serviço",
+            "price": 1400,
+            "image": "https://github.com/Sants16.png"
+        },
+        {
+            "name": "Serviço 3",
+            "description": "terceiro serviço",
+            "price": 1300,
+            "image": "https://github.com/Sants16.png"
+        }
+    ]
+}
+
+###
+GET http://localhost:3000/api/parties
+
+###
+GET http://localhost:3000/api/parties/63a0a2e7ff9d24d133dd3c87
+
+###
+DELETE http://localhost:3000/api/parties/63a0a2e7ff9d24d133dd3c87
+
+###
+PUT http://localhost:3000/api/parties/63a0a3b798df2feb488f383d
+Content-Type: application/json
+
+{
+    "title": "Meu evento 3",
+    "author": "João",
+    "description": "Festa de casamento",
+    "budget": 9000,
+    "image": "https://github.com/Sants16.png",
+    "services": [
+        {
+            "name": "Serviço 1",
+            "description": "primeiro serviço",
+            "price": 1500,
+            "image": "https://github.com/Sants16.png"
+        },
+        {
+            "name": "Serviço 2",
+            "description": "segundo serviço",
+            "price": 1400,
+            "image": "https://github.com/Sants16.png"
+        },
+        {
+            "name": "Serviço 3",
+            "description": "terceiro serviço",
+            "price": 1300,
+            "image": "https://github.com/Sants16.png"
+        }
+    ]
+}
