@@ -2,10 +2,14 @@
   <h1 class="display-4">Olá, bem-vindo ao Blog</h1>
   <p class="lead">Blog desenvolvido com Node.js, Express e MongoDB</p>
   <hr class="my-4">
+  {{#if user}}
+  <p>Agora utilize o blog sem problemas</p>
+  {{else}}
   <p>Faça uma conta no blog</p>
   <p class="lead">
-    <a class="btn btn-primary btn-lg" href="#" role="button">Crie uma conta</a>
+    <a class="btn btn-primary btn-lg" href="/usuario/registro" role="button">Crie uma conta</a>
   </p>
+  {{/if}}
 </div>
 <hr>
 
